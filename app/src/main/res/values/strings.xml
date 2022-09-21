@@ -1,0 +1,10 @@
+<resources>
+    <plurals name="word_count">
+        <item quantity="one">%d word</item>
+        <item quantity="other">%d words</item>
+    </plurals>
+
+    <string name="app_name">Word Count</string>
+    <string name="random">Random</string>
+    <string name="input_words_prompt">Words</string>
+</resources>
