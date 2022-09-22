@@ -12,21 +12,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WordCountViewModel(private val dispatcher: CoroutineDispatcher = Dispatchers.Default): ViewModel() {
-    var uiState by mutableStateOf(WordCountInfo("", 0))
+    var wordCountInfoState by mutableStateOf(WordCountInfo("", 0))
         private set
 
     fun wordsInput(newWords: String) {
-        Log.d(TAG, "newWords: $newWords")
+        Log.d(TAG, "Words input: $newWords")
         viewModelScope.launch(dispatcher) {
-            uiState = WordCountInfo(newWords, countWords(newWords))
+            wordCountInfoState = WordCountInfo(newWords, countWords(newWords))
         }
     }
 
     fun random() {
-        Log.d(TAG, "random")
+        Log.d(TAG, "Random")
         viewModelScope.launch(dispatcher) {
             val s = getRandomString()
-            uiState = WordCountInfo(s, countWords(s))
+            wordCountInfoState = WordCountInfo(s, countWords(s))
         }
     }
 
@@ -35,15 +35,17 @@ class WordCountViewModel(private val dispatcher: CoroutineDispatcher = Dispatche
     }
 
     private fun getRandomString() : String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9') + " "
-        val length = (1..100).random()
+        val length = (1..MAX_RANDOM_LENGTH).random()
         return (1..length)
-            .map { allowedChars.random() }
+            .map { ALLOWED_RANDOM_CHARS.random() }
             .joinToString("")
     }
 
     companion object {
         private val WORD_SEPARATORS = "\\s+".toRegex()
+
+        private val MAX_RANDOM_LENGTH = 100
+        private val ALLOWED_RANDOM_CHARS = ('A'..'Z') + ('a'..'z') + ('0'..'9') + " "
 
         private const val TAG = "WordCountViewModel"
     }

@@ -14,14 +14,31 @@ class WordCountViewModelTest {
     val instantCoroutineRule = MainCoroutineRule()
 
     @Test
-    fun wordsInput() {
+    fun words_input_are_displayed() {
         val viewModel = WordCountViewModel(Dispatchers.Main)
-        viewModel.wordsInput("abc def")
-        assertEquals("abc def", viewModel.uiState.words)
-        assertEquals(2, viewModel.uiState.wordCount)
+        val wordsInput = "abc def"
+        viewModel.wordsInput(wordsInput)
+        assertEquals(wordsInput, viewModel.wordCountInfoState.words)
     }
 
     @Test
-    fun random() {
+    fun words_input_are_counted() {
+        val viewModel = WordCountViewModel(Dispatchers.Main)
+        val wordsInputCountList = mapOf("abc def" to 2, "" to 0, "  " to 0, "\n" to 0, "a!@£$%^&*(b" to 1)
+        wordsInputCountList.forEach { (wordsInput, expectedCount) ->
+            viewModel.wordsInput(wordsInput)
+            assertEquals(expectedCount, viewModel.wordCountInfoState.wordCount)
+        }
+    }
+
+    @Test
+    fun random_text_generated() {
+        val viewModel = WordCountViewModel(Dispatchers.Main)
+        val wordsInput = "abc def"
+        viewModel.wordsInput(wordsInput)
+        viewModel.random()
+        val randomWords = viewModel.wordCountInfoState.words
+        assertNotEquals(wordsInput, randomWords)
+        assert(randomWords.isNotEmpty())
     }
 }
